@@ -1,30 +1,42 @@
-/* LoginPage.jsx (React) - save alongside LoginPage.css
-
-Usage:
-1. Save this file as LoginPage.jsx
-2. Save the CSS (below) as LoginPage.css in the same folder
-3. Import and render <LoginPage /> from App.jsx
-
-This component recreates the split login layout (left gradient hero + right white card)
-*/
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios"
 import "./login.css";
 
-export default function LoginPage() {
+export function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "", remember: false });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((s) => ({ ...s, [name]: type === "checkbox" ? checked : value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // simple client-side validation
-    if (!form.email || !form.password) return alert("Please fill all fields.");
-    console.log("Login data:", form);
-    // call your API here
+
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/auth/login",
+        {
+          email: form.email,
+          password: form.password
+        }
+      );
+
+      // Store JWT and user info
+      localStorage.setItem("token", res.data.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.data.user));
+
+      // Navigate to dashboard
+      navigate("/dashboard");
+
+    } catch (error) {
+  console.error("LOGIN ERROR FULL:", error);
+  console.error("LOGIN ERROR RESPONSE:", error.response);
+  alert(error.response?.data?.message || "Login failed");
+}
+
   };
 
   return (

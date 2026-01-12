@@ -1,14 +1,36 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-const DashboardPage = ({ user }) => {
-    const userD = {
-  name: "Rahul Sharma",
-  email: "rahul.sharma@example.com",
-  password: "********",
-  age: 22,
-  address: "B-203, Green Park, New Delhi, India"
-};
+export const DashboardPage = () => {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const res = await axios.get(
+          "/api/auth/dashboard",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        setUser(res.data.data);
+      } catch (error) {
+        // Token invalid or expired
+        localStorage.clear();
+        navigate("/login");
+      }
+    };
+
+    fetchDashboard();
+  }, [navigate]);
+
+  if (!user) return <h2>Loading...</h2>;
 
   return (
     <div className="dashboard-container">
@@ -17,33 +39,24 @@ const DashboardPage = ({ user }) => {
 
         <div className="info-row">
           <span>Full Name:</span>
-          <span>{userD.name}</span>
+          <span>{user.fullName}</span>
         </div>
 
         <div className="info-row">
           <span>Email:</span>
-          <span>{userD.email}</span>
-        </div>
-
-        <div className="info-row">
-          <span>Password:</span>
-          <span>{userD.password}</span>
+          <span>{user.email}</span>
         </div>
 
         <div className="info-row">
           <span>Age:</span>
-          <span>{userD.age}</span>
+          <span>{user.age}</span>
         </div>
 
         <div className="info-row">
           <span>Address:</span>
-          <span>{userD.address}</span>
+          <span>{user.address}</span>
         </div>
-
-        <button className="edit-btn">Change Details</button>
       </div>
     </div>
   );
 };
-
-export default DashboardPage;

@@ -1,17 +1,10 @@
-/* RegistrationPage.jsx (React) - save alongside RegistrationPage.css
-
-Usage:
-1. Save this file as RegistrationPage.jsx
-2. Save the CSS (below) as RegistrationPage.css in the same folder
-3. Import and render <RegistrationPage /> from App.jsx
-
-This component recreates the split registration layout (left gradient hero + right white form panel)
-*/
-
 import React, { useState } from "react";
 import "./register.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+console.log("Register.jsx loaded");
 
-export default function RegistrationPage() {
+export function RegistrationPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -20,22 +13,42 @@ export default function RegistrationPage() {
     password: "",
     confirmPassword: "",
   });
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((s) => ({ ...s, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
+
+    if (!form.name || !form.email || !form.age || !form.phone || !form.password || !form.confirmPassword) {
       return alert("Please fill all required fields.");
     }
+
     if (form.password !== form.confirmPassword) {
       return alert("Passwords do not match.");
     }
-    console.log("Registration data:", form);
-    // call your API here
+
+    try {
+      const res = await axios.post("/api/auth/register", {
+        fullName: form.name,
+        age: form.age,
+        address: form.address,
+        phoneNumber: form.phone,
+        email: form.email,
+        password: form.password
+      });
+
+      console.log("Server response:", res.data);
+      navigate("/login");
+
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+      alert(error.response?.data?.message || "Registration failed");
+    }
+  };
+
+  // Handle change function
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((s) => ({ ...s, [name]: value }));
   };
 
   return (
@@ -83,16 +96,6 @@ export default function RegistrationPage() {
               <label className="input-wrap">
                 <span className="icon" aria-hidden>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path d="M4 4h16v12H4z" stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M22 6l-10 7L2 6" stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" required />
-              </label>
-
-              <label className="input-wrap">
-                <span className="icon" aria-hidden>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <circle cx="12" cy="12" r="10" stroke="#8b7be6" strokeWidth="1.2" />
                   </svg>
                 </span>
@@ -108,6 +111,48 @@ export default function RegistrationPage() {
                 <textarea name="address" value={form.address} onChange={handleChange} placeholder="Address" />
               </label>
 
+              <label className="input-wrap">
+                <span className="icon" aria-hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 
+                            19.86 19.86 0 0 1-8.63-3.07 
+                            19.5 19.5 0 0 1-6-6 
+                            19.86 19.86 0 0 1-3.07-8.67 
+                            A2 2 0 0 1 4.11 2h3 
+                            a2 2 0 0 1 2 1.72 
+                            12.84 12.84 0 0 0 .7 2.81 
+                            2 2 0 0 1-.45 2.11L8.09 9.91 
+                            a16 16 0 0 0 6 6l1.27-1.27 
+                            a2 2 0 0 1 2.11-.45 
+                            12.84 12.84 0 0 0 2.81.7 
+                            a2 2 0 0 1 1.72 2z"
+                          stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+
+                <input
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  placeholder="Phone Number"
+                  pattern="^[6-9][0-9]{9}$"
+                  title="Enter a valid 10-digit Indian mobile number"
+                  required
+                />
+              </label>
+
+
+              <label className="input-wrap">
+                <span className="icon" aria-hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 4h16v12H4z" stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M22 6l-10 7L2 6" stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" required />
+              </label>
+              
               <label className="input-wrap">
                 <span className="icon" aria-hidden>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">

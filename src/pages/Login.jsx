@@ -1,104 +1,97 @@
-import React from 'react';
-import { useNavigate } from "react-router-dom";
+/* LoginPage.jsx (React) - save alongside LoginPage.css
 
-export default function Login() {
-  const navigate = useNavigate();
+Usage:
+1. Save this file as LoginPage.jsx
+2. Save the CSS (below) as LoginPage.css in the same folder
+3. Import and render <LoginPage /> from App.jsx
 
-  const handleLogin = (e) => {
-  e.preventDefault();
+This component recreates the split login layout (left gradient hero + right white card)
+*/
 
-  localStorage.setItem("isLoggedIn", "true");
-  navigate("/dashboard");
-};
+import React, { useState } from "react";
+import "./login.css";
+
+export default function LoginPage() {
+  const [form, setForm] = useState({ email: "", password: "", remember: false });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((s) => ({ ...s, [name]: type === "checkbox" ? checked : value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // simple client-side validation
+    if (!form.email || !form.password) return alert("Please fill all fields.");
+    console.log("Login data:", form);
+    // call your API here
+  };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-purple-600 via-pink-500 to-indigo-500">
-      <div className="w-full max-w-5xl bg-white/0 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
-        {/* LEFT PANEL */}
-        <div className="relative p-12 md:p-16 flex flex-col justify-center bg-gradient-to-br from-purple-700 via-pink-500 to-orange-400 text-white">
-          <div className="absolute inset-0 opacity-20 pointer-events-none">
-            {/* Decorative slashes using SVG for the style in the design */}
-            <svg className="w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="g" x1="0" x2="1">
-                  <stop offset="0" stopColor="#FFD27A" />
-                  <stop offset="1" stopColor="#FF6B9A" />
-                </linearGradient>
-              </defs>
-              <g fill="url(#g)">
-                <rect x="5" y="70" width="30" height="6" rx="3" transform="rotate(-20 20 73)" />
-                <rect x="30" y="60" width="36" height="8" rx="4" transform="rotate(-20 50 64)" />
-                <rect x="60" y="50" width="28" height="10" rx="5" transform="rotate(-20 74 55)" />
-                <rect x="10" y="40" width="20" height="5" rx="3" transform="rotate(-15 20 42)" />
-              </g>
-            </svg>
+    <div className="login-hero">
+      <div className="login-card">
+        <aside className="hero-left">
+          <div className="hero-content">
+            <h1>Welcome to website</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam
+              nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat
+              volutpat.
+            </p>
           </div>
+          <svg className="hero-deco" viewBox="0 0 800 400" preserveAspectRatio="none" aria-hidden>
+            <defs>
+              <linearGradient id="g1" x1="0%" x2="100%">
+                <stop offset="0%" stopColor="#ff8a65" />
+                <stop offset="100%" stopColor="#ffd270" />
+              </linearGradient>
+            </defs>
+            <g fill="url(#g1)" opacity="0.7">
+              <rect x="40" y="260" rx="30" ry="30" width="220" height="40" transform="rotate(-22 150 280)" />
+              <rect x="200" y="300" rx="30" ry="30" width="260" height="40" transform="rotate(-22 330 320)" />
+              <rect x="320" y="170" rx="30" ry="30" width="180" height="40" transform="rotate(-18 410 190)" />
+            </g>
+          </svg>
+        </aside>
 
-          <div className="relative z-10 max-w-lg">
-            <h1 className="text-3xl md:text-4xl font-semibold">Welcome to website</h1>
-            <p className="mt-4 text-sm md:text-base opacity-90">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          </div>
-        </div>
+        <main className="hero-right">
+          <div className="login-form-card">
+            <h3>USER LOGIN</h3>
 
-        {/* RIGHT PANEL */}
-        <div className="p-8 md:p-12 bg-white flex items-center justify-center">
-          <div className="w-full max-w-sm">
-            <h3 className="text-sm font-medium text-gray-500 text-right">USER LOGIN</h3>
-
-            <form className="mt-6 space-y-4">
-              <div className="relative">
-                <label className="sr-only">Email</label>
-                <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M2.94 6.94a.75.75 0 011.06 0L10 12.94l5.99-6a.75.75 0 011.06 1.06l-6.5 6.5a.75.75 0 01-1.06 0l-6.5-6.5a.75.75 0 010-1.06z" />
+            <form onSubmit={handleSubmit} className="form" noValidate>
+              <label className="input-wrap">
+                <span className="icon" aria-hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z" stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M20 21v-1c0-2.761-3.582-5-8-5s-8 2.239-8 5v1" stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  <input type="email" placeholder="Email" className="ml-3 bg-transparent w-full outline-none text-sm text-black" />
-                </div>
-              </div>
-
-              <div className="relative">
-                <label className="sr-only">Password</label>
-                <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5 9a3 3 0 116 0v1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4a1 1 0 011-1h1V9zm3-3a2 2 0 00-2 2v1h4V8a2 2 0 00-2-2z" clipRule="evenodd" />
-                  </svg>
-                  <input type="password" placeholder="Password" className="ml-3 bg-transparent w-full outline-none text-sm text-black" />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-gray-500">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="h-4 w-4 rounded" />
-                  Remember me
-                </label>
-                <a href="#" className="underline">Forgot password?</a>
-              </div>
-
-              <button type="submit" className="w-full mt-3 py-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 text-white font-medium">LOGIN</button>
-
-              <div className="mt-5 text-center text-sm text-gray-400">or login with</div>
-
-              <div className="mt-4 flex gap-3">
-                <button type="button" className="flex-1 py-2 rounded-full bg-white border border-gray-200 text-gray-700 flex items-center justify-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.6 32.5 30 36 24 36c-7 0-12.7-5.7-12.7-12.7S17 10.5 24 10.5c3.3 0 6.3 1.2 8.6 3.3l6.9-6.9C37.8 4.3 31.3 2 24 2 11.9 2 2 11.9 2 24s9.9 22 22 22 20-8.9 20-22c0-1.3-.1-2.6-.5-3.8z"/></svg>
-                  Google
-                </button>
-              </div>
-
-              <p className="mt-6 text-xs text-gray-400 text-center">
-                New user?{" "}
-                <span
-                className="text-purple-600 font-semibold cursor-pointer"
-                onClick={() => navigate("/register")}
-                >
-                  Register here
                 </span>
-              </p>
+                <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" required />
+              </label>
 
-              <p className="mt-6 text-xs text-gray-400 text-center">Designed with care.</p>
+              <label className="input-wrap">
+                <span className="icon" aria-hidden>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="11" width="18" height="10" rx="2" stroke="#8b7be6" strokeWidth="1.2" />
+                    <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="#8b7be6" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" required />
+              </label>
+
+              <div className="form-row">
+                <label className="remember">
+                  <input type="checkbox" name="remember" checked={form.remember} onChange={handleChange} />
+                  <span>Remember</span>
+                </label>
+
+                <a className="forgot" href="#">Forgot password?</a>
+              </div>
+
+              <button className="btn-login" type="submit">LOGIN</button>
             </form>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );

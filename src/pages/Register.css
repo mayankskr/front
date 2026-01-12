@@ -1,0 +1,156 @@
+/*
+Save the following CSS as RegistrationPage.css next to the component
+*/
+
+/* RegistrationPage.css */
+:root{
+  --bg1: #6b46ff;
+  --bg2: #b96ffb;
+  --accent: #8b7be6;
+  --muted: #9aa0b4;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+
+.registration-hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(135deg, var(--bg1) 0%, #8b5cf6 40%, #e77ebf 100%);
+  padding:48px 24px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+.registration-card{
+  width:100%;
+  max-width:1000px;
+  display:grid;
+  grid-template-columns: 1fr 420px;
+  background:transparent;
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow: 0 20px 60px rgba(7,10,26,0.35);
+}
+
+.hero-left{
+  padding:64px 60px;
+  color: #fff;
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+
+.hero-left::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, rgba(255,105,135,0.08), rgba(255,200,120,0.06));
+  mix-blend-mode: overlay;
+  pointer-events:none;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:480px;
+}
+
+.hero-left h1{
+  font-size:36px;
+  margin:0 0 14px;
+  line-height:1.05;
+  font-weight:700;
+}
+
+.hero-left p{
+  margin:0;
+  color: rgba(255,255,255,0.95);
+  font-size:14px;
+  line-height:1.6;
+}
+
+.hero-deco{
+  position:absolute;
+  right: -40px;
+  bottom: -10px;
+  width:70%;
+  height:50%;
+  opacity:0.95;
+  z-index:1;
+}
+
+.hero-right{
+  background: #ffffff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 36px;
+}
+
+.registration-form-card{
+  width:100%;
+  max-width:320px;
+}
+
+.registration-form-card h3{
+  font-size:13px;
+  letter-spacing:1px;
+  color: var(--accent);
+  text-align:center;
+  margin:0 0 20px;
+}
+
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.input-wrap{
+  display:flex;
+  align-items:center;
+  background: #f4f1ff;
+  border-radius:28px;
+  padding:8px 12px;
+  border:1px solid rgba(139,123,230,0.12);
+}
+
+.textarea-wrap{align-items:flex-start}
+.textarea-wrap textarea{height:72px;padding-top:10px}
+
+.input-wrap .icon{display:inline-flex;align-items:center;justify-content:center;margin-right:10px}
+
+.input-wrap input, .input-wrap textarea{
+  border:0;
+  outline:none;
+  background:transparent;
+  padding:10px 6px;
+  width:100%;
+  font-size:14px;
+}
+
+.btn-register{
+  margin-top:6px;
+  padding:10px 18px;
+  border-radius:24px;
+  border:0;
+  cursor:pointer;
+  font-weight:600;
+  background: linear-gradient(90deg,#ff7a9a,#8b7be6);
+  color:#fff;
+  box-shadow: 0 10px 30px rgba(139,123,230,0.18);
+}
+
+@media (max-width:880px){
+  .registration-card{grid-template-columns:1fr;}
+  .hero-left{padding:36px}
+  .hero-deco{display:none}
+  .hero-right{padding:28px}
+}
+
+@media (max-width:420px){
+  .hero-left h1{font-size:24px}
+  .registration-hero{padding:20px}
+}

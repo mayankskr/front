@@ -16,13 +16,10 @@ export function LoginPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "http://localhost:4000/api/auth/login",
-        {
+      const res = await axios.post("/api/auth/login",{
           email: form.email,
           password: form.password
-        }
-      );
+        });
 
       // Store JWT and user info
       localStorage.setItem("token", res.data.data.token);
@@ -32,10 +29,10 @@ export function LoginPage() {
       navigate("/dashboard");
 
     } catch (error) {
-  console.error("LOGIN ERROR FULL:", error);
-  console.error("LOGIN ERROR RESPONSE:", error.response);
-  alert(error.response?.data?.message || "Login failed");
-}
+      console.error("LOGIN ERROR FULL:", error);
+      console.error("LOGIN ERROR RESPONSE:", error.response);
+      alert(error.response?.data?.message || "Login failed");
+    }
 
   };
 
@@ -102,6 +99,7 @@ export function LoginPage() {
 
               <button className="btn-login" type="submit">LOGIN</button>
             </form>
+            <p className="text-outer">Not registerd? <a href="/register" className="link">Register</a></p>
           </div>
         </main>
       </div>

@@ -154,3 +154,44 @@ html,body,#root{height:100%}
   .hero-left h1{font-size:24px}
   .registration-hero{padding:20px}
 }
+
+/* container for each input; reserves space for bottom message */
+.input-wrap {
+  position: relative;
+  margin-bottom: 10px;
+  padding-bottom: 26px; /* room for the error message */
+}
+
+/* small red warning shown at the bottom left of the input-wrap */
+.input-wrap .error {
+  position: absolute;
+  left: 10px;
+  bottom: -19px;            /* distance from the bottom of the input-wrap */
+  color: #b00020;         /* warning red */
+  font-size: 12px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* for multi-line textarea, give a bit more room */
+.textarea-wrap {
+  padding-bottom: 34px;
+}
+
+/* server/api error box (full width under the form) */
+.error-box {
+  background: rgba(176, 0, 32, 0.06);
+  color: #b00020;
+  border: 1px solid rgba(176, 0, 32, 0.12);
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 10px 0;
+  font-size: 13px;
+}
+
+.link:hover{
+ color:#6b46ff;
+}
+.text-outer{
+  color: #9aa0b4;
+}

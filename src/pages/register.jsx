@@ -1,54 +1,135 @@
+// Register.jsx
 import React, { useState } from "react";
 import "./register.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-console.log("Register.jsx loaded");
 
 export function RegistrationPage() {
   const [form, setForm] = useState({
     name: "",
     email: "",
     age: "",
+    phone: "",
     address: "",
     password: "",
     confirmPassword: "",
   });
+
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+const navigateTo = ()=>{
+  navigate("/login")
+}
+// validate: only frontend checks (no backend checks)
+const validate = () => {
+  const newErrors = {};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  if (!form.name.trim()) newErrors.name = "Full name is required.";
 
-    if (!form.name || !form.email || !form.age || !form.phone || !form.password || !form.confirmPassword) {
-      return alert("Please fill all required fields.");
+  if (!form.email.trim()) newErrors.email = "Email is required.";
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+    newErrors.email = "Enter a valid email.";
+
+  if (!form.age) newErrors.age = "Age is required.";
+  else if (isNaN(form.age) || Number(form.age) <= 0) newErrors.age = "Enter a valid age.";
+
+  if (!form.phone) newErrors.phone = "Phone number is required.";
+  else if (!/^[6-9][0-9]{9}$/.test(form.phone))
+    newErrors.phone = "Enter a valid 10-digit Indian mobile number.";
+
+  if (!form.password) newErrors.password = "Password is required.";
+  else if (form.password.length < 6) newErrors.password = "Password must be at least 6 characters.";
+
+  if (!form.confirmPassword) newErrors.confirmPassword = "Confirm your password.";
+  if (form.password && form.confirmPassword && form.password !== form.confirmPassword)
+    newErrors.confirmPassword = "Passwords do not match.";
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+const isFormValid = () => {
+  return (
+    form.name.trim() &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
+    form.age &&
+    /^[6-9][0-9]{9}$/.test(form.phone) &&
+    form.password.length >= 6 &&
+    form.password === form.confirmPassword
+  );
+};
+const isFormFilled = () => {
+  return Object.values(form).every((value) => value.trim() !== "");
+};
+
+// handleSubmit: call validate(), then handle backend duplicate email in catch
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // clear previous API error before validating
+  setErrors((prev) => {
+    const copy = { ...prev };
+    delete copy.api;
+    return copy;
+  });
+
+  if (!validate()) return;
+
+  try {
+    const res = await axios.post("/api/auth/register", {
+      fullName: form.name,
+      age: form.age,
+      address: form.address,
+      phoneNumber: form.phone,
+      email: form.email,
+      password: form.password,
+    });
+
+    const token = res.data?.data?.token ?? res.data?.token;
+    const user = res.data?.data?.user ?? res.data?.user;
+
+    if (!token || !user) {
+      setErrors({ api: "Registration succeeded but server did not return a token." });
+      return;
     }
 
-    if (form.password !== form.confirmPassword) {
-      return alert("Passwords do not match.");
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+    navigate("/dashboard");
+  } catch (error) {
+    // inspect server response (use console.log while debugging)
+    // console.log("Register error response:", error.response?.data);
+
+    const serverMessage = error.response?.data?.message ?? error.response?.data?.error;
+    if (serverMessage === "Email is already registered" || error.response?.status === 409) {
+      // set email-specific error from backend
+      setErrors((prev) => ({ ...prev, email: "Email is already registered." }));
+    } else {
+      const apiMsg = serverMessage ?? "Registration failed";
+      setErrors({ api: apiMsg });
     }
+  }
+};
 
-    try {
-      const res = await axios.post("/api/auth/register", {
-        fullName: form.name,
-        age: form.age,
-        address: form.address,
-        phoneNumber: form.phone,
-        email: form.email,
-        password: form.password
-      });
 
-      console.log("Server response:", res.data);
-      navigate("/login");
-
-    } catch (error) {
-      console.error(error.response?.data || error.message);
-      alert(error.response?.data?.message || "Registration failed");
-    }
-  };
-
-  // Handle change function
+  // update form and clear field-specific error when user types
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
+
+    if (errors[name]) {
+      setErrors((prev) => {
+        const copy = { ...prev };
+        delete copy[name];
+        return copy;
+      });
+    }
+    if (errors.api) {
+      setErrors((prev) => {
+        const copy = { ...prev };
+        delete copy.api;
+        return copy;
+      });
+    }
   };
 
   return (
@@ -91,6 +172,7 @@ export function RegistrationPage() {
                   </svg>
                 </span>
                 <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Full Name" required />
+                {errors.name && <small className="error">{errors.name}</small>}
               </label>
 
               <label className="input-wrap">
@@ -100,6 +182,7 @@ export function RegistrationPage() {
                   </svg>
                 </span>
                 <input type="number" name="age" value={form.age} onChange={handleChange} placeholder="Age" />
+                {errors.age && <small className="error">{errors.age}</small>}
               </label>
 
               <label className="input-wrap textarea-wrap">
@@ -140,8 +223,8 @@ export function RegistrationPage() {
                   title="Enter a valid 10-digit Indian mobile number"
                   required
                 />
+                {errors.phone && <small className="error">{errors.phone}</small>}
               </label>
-
 
               <label className="input-wrap">
                 <span className="icon" aria-hidden>
@@ -151,6 +234,7 @@ export function RegistrationPage() {
                   </svg>
                 </span>
                 <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="Email" required />
+                {errors.email && <small className="error">{errors.email}</small>}
               </label>
               
               <label className="input-wrap">
@@ -161,6 +245,7 @@ export function RegistrationPage() {
                   </svg>
                 </span>
                 <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Password" required />
+                {errors.password && <small className="error">{errors.password}</small>}
               </label>
 
               <label className="input-wrap">
@@ -170,14 +255,23 @@ export function RegistrationPage() {
                   </svg>
                 </span>
                 <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} placeholder="Confirm Password" required />
+                {errors.confirmPassword && <small className="error">{errors.confirmPassword}</small>}
               </label>
 
-              <button className="btn-register" type="submit">REGISTER</button>
+              {errors.api && <div className="error-box">{errors.api}</div>}
+
+              <button
+                className="btn-register"
+                type="submit"
+                disabled={!isFormFilled()}
+              >
+                REGISTER
+              </button>
             </form>
+            <p className="text-outer">Already a user <a href="/login" className="link">Login</a></p>
           </div>
         </main>
       </div>
     </div>
   );
 }
-

@@ -4,7 +4,7 @@ import "./register.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export function RegistrationPage() {
+const RegistrationPage = ()=> {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -275,3 +275,4 @@ const handleSubmit = async (e) => {
     </div>
   );
 }
+export default RegistrationPage;

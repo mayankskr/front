@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import { RegistrationPage } from "./pages/Register.jsx";
-import { LoginPage } from "./pages/Login.jsx";
-import { DashboardPage } from "./pages/Dashboard.jsx";
+import RegistrationPage from "./pages/Register.jsx";
+import LoginPage from "./pages/Login.jsx";
+import DashboardPage from "./pages/Dashboard.jsx";
 console.log("App loaded");
 
 

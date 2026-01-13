@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios"
 import "./login.css";
 
-export function LoginPage() {
+const LoginPage= ()=> {
   const [form, setForm] = useState({ email: "", password: "", remember: false });
   const navigate = useNavigate();
 
@@ -106,3 +106,4 @@ export function LoginPage() {
     </div>
   );
 }
+export default LoginPage;

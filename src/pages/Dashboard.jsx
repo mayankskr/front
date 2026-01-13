@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-export const DashboardPage = () => {
+const DashboardPage = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -108,3 +108,4 @@ export const DashboardPage = () => {
     </div>
   );
 };
+export default DashboardPage;

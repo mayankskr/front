@@ -99,7 +99,7 @@ export function LoginPage() {
 
               <button className="btn-login" type="submit">LOGIN</button>
             </form>
-            <p className="text-outer">Not registerd? <a href="/register" className="link">Register</a></p>
+            <p className="text-outer">Not registerd? <a href="/" className="link">Register</a></p>
           </div>
         </main>
       </div>

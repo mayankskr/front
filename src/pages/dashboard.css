@@ -37,7 +37,7 @@
   display:grid; place-items:center; color:white; font-weight:700;
   box-shadow: 0 8px 20px rgba(2,6,23,0.18);
 }
-.brand-text h1 { margin:0; color:#fff; font-size:18px; }
+.brand-text h1{ margin:0; color:#fff; font-size:18px; }
 .brand-text small { color: rgba(255,255,255,0.9); font-size:12px; }
 
 /* Header actions */
@@ -95,11 +95,12 @@
 
 
 /* details grid */
-.details-grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+.details-flex { display:flex; flex-direction: column; }
 .info-row {
   background: linear-gradient(180deg,#fff,#fbfbff); padding:12px 14px; border-radius:10px;
-  display:flex; justify-content:space-between; align-items:center; box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+  display:flex; flex-direction: column; box-shadow: 0 6px 18px rgba(2,6,23,0.04);
   font-size:15px;
+  gap: 15px;
 }
 .info-address { grid-column: 1 / -1; }
 
@@ -162,4 +163,12 @@ button:hover{
   .info-row {
     font-size: 14px;
   }
+}
+.personal-info{
+  font-size: 50px;
+  font-weight: 600;
+  color:#374151;
+}
+b{
+  color:#374151be;
 }

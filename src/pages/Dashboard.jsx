@@ -80,26 +80,32 @@ const DashboardPage = () => {
       <main className="dashboard-main">
         <aside className="profile-column">
           <div className="profile-card">
-            <div className="avatar">{initials(user.fullName)}</div>
+            {user.avatar ? (
+              <img
+                src={`http://localhost:4000/uploads/${user.avatar}`}
+                alt="avatar"
+                style={{ width: 96, height: 96, borderRadius: "50%", objectFit: "cover" }}
+              />
+            ) : (
+              <div className="avatar">{initials(user.fullName)}</div>
+            )}
             <h2 className="profile-name">{user.fullName}</h2>
             <p className="profile-role">Member since {new Date(user.createdAt).toLocaleDateString()}</p>
-
-
           </div>
         </aside>
 
         <section className="details-column">
           <div className="details-card">
             <div className="details-header">
-              <h1>Personal Information</h1>
+              <h1 className="personal-info">Personal Information</h1>
             </div>
 
-            <div className="details-grid">
-              <div className="info-row"><span>Full Name</span><span>{user.fullName}</span></div>
-              <div className="info-row"><span>Email</span><span>{user.email}</span></div>
-              <div className="info-row"><span>Phone Number</span><span>{user.phoneNumber || "-"}</span></div>
-              <div className="info-row"><span>Age</span><span>{user.age || "-"}</span></div>
-              <div className="info-row info-address"><span>Address</span><span>{user.address || "-"}</span></div>
+            <div className="details-flex">
+              <div className="info-row"><span><b>Full Name</b></span><span>{user.fullName}</span></div>
+              <div className="info-row"><span><b>Email</b></span><span>{user.email}</span></div>
+              <div className="info-row"><span><b>Phone Number</b></span><span>{user.phoneNumber || "-"}</span></div>
+              <div className="info-row"><span><b>Age</b></span><span>{user.age || "-"}</span></div>
+              <div className="info-row info-address"><span><b>Address</b></span><span>{user.address || "-"}</span></div>
             </div>
           </div>
 
